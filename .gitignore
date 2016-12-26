@@ -1,5 +1,6 @@
 .env
 database.sqlite3
+docker-compose.yml
 
 *.gem
 *.rbc
