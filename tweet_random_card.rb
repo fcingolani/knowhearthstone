@@ -27,24 +27,36 @@ card = Card.first_untweeted_random()
 
   LOGGER.info "Picked #{card.data}"
 
-
   begin
     image = open("http://wow.zamimg.com/images/hearthstone/cards/enus/animated/#{card.id}_premium.gif")
+    
+    if image.status.first != 200 
+      image.close
+      image = nil
+    end
   rescue OpenURI::HTTPError => ex
     image = nil
-    LOGGER.info "Golden card not found"
   end
 
   if image == nil
+    LOGGER.info "Golden card not found"
     begin
       image = open("http://wow.zamimg.com/images/hearthstone/cards/enus/original/#{card.id}.png")
+    
+      if image.status.first != 200 
+        image.close
+        image = nil
+      end
     rescue OpenURI::HTTPError => ex
       image = nil
-      LOGGER.info "Regular card not found"
     end
   end
 
-  if image != nil
+  if image == nil
+    
+      LOGGER.info "Regular card not found, won't tweet it."
+    
+  else
 
     text = card_data['flavor']
 
